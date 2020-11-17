@@ -18,22 +18,22 @@ func NewServer(service *Service) *Server {
 }
 
 // Mount ...
-func (server *Server) Mount(e *echo.Echo) {
-	e.POST("/auth/register", server.CreateUser)
+func (s *Server) Mount(e *echo.Echo) {
+	e.POST("/auth/register", s.CreateUser)
+	e.POST("/auth/login", s.Login)
 }
 
 // CreateUser ...
-func (server *Server) CreateUser(c echo.Context) error {
+func (s *Server) CreateUser(c echo.Context) error {
 	// Given
 	inpt := RegisterInput{
-		Username:        c.FormValue("username"),
-		Email:           c.FormValue("email"),
-		Password:        c.FormValue("password"),
-		PasswordConfirm: c.FormValue("password_confirmation"),
+		Username: c.FormValue("username"),
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
 	}
 
 	// Process
-	user, err := server.service.CreateUser(c.Request().Context(), inpt)
+	user, err := s.service.CreateUser(c.Request().Context(), inpt)
 	if err != nil {
 		if m, err := err.(*flaw.AppError); err {
 			return c.JSON(m.StatusCode, m.Message)
@@ -43,4 +43,25 @@ func (server *Server) CreateUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, user)
+}
+
+// Login ...
+func (s *Server) Login(c echo.Context) error {
+	// Given
+	inpt := LoginInput{
+		Username: c.FormValue("username"),
+		Password: c.FormValue("password"),
+	}
+
+	// Process
+	u, err := s.service.Authenticate(c.Request().Context(), inpt)
+	if err != nil {
+		if m, err := err.(*flaw.AppError); err {
+			return c.JSON(m.StatusCode, m.Message)
+		}
+
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, u)
 }

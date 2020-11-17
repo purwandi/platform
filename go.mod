@@ -6,6 +6,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-rel/rel v0.9.1
+	github.com/google/uuid v1.1.2
 	github.com/graph-gophers/graphql-go v0.0.0-20201113091052-beb923fada29
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo v3.3.10+incompatible

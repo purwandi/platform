@@ -6,11 +6,13 @@ import "github.com/go-rel/rel"
 func MigrateCreateUser(schema *rel.Schema) {
 	schema.CreateTable("users", func(t *rel.Table) {
 		t.ID("id")
+		t.String("username", rel.Limit(64))
 		t.String("email", rel.Limit(64))
 		t.String("password")
 		t.String("access_token", rel.Limit(128))
 		t.String("fullname", rel.Limit(128))
 		t.String("callname", rel.Limit(32))
+		t.String("phone_number", rel.Limit(128))
 		t.Bool("active", rel.Default(false))
 		t.DateTime("created_at")
 		t.DateTime("updated_at")

@@ -23,10 +23,9 @@ type User struct {
 
 // RegisterInput ...
 type RegisterInput struct {
-	Username        string
-	Email           string
-	Password        string
-	PasswordConfirm string
+	Username string
+	Email    string
+	Password string
 }
 
 // Validate ...
@@ -35,6 +34,19 @@ func (inpt RegisterInput) Validate() error {
 		validation.Field(&inpt.Username, validation.Required),
 		validation.Field(&inpt.Email, validation.Required, is.Email),
 		validation.Field(&inpt.Password, validation.Required),
-		validation.Field(&inpt.PasswordConfirm, validation.Required),
+	)
+}
+
+// LoginInput ...
+type LoginInput struct {
+	Username string
+	Password string
+}
+
+// Validate ...
+func (inpt LoginInput) Validate() error {
+	return validation.ValidateStruct(&inpt,
+		validation.Field(&inpt.Username, validation.Required),
+		validation.Field(&inpt.Password, validation.Required),
 	)
 }
