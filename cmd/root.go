@@ -16,8 +16,8 @@ import (
 
 var (
 	logger    *zap.Logger
-	dbw       rel.Repository
-	dbr       rel.Repository
+	relw      rel.Repository
+	relr      rel.Repository
 	shutdowns []func() error
 
 	ctx = context.Background()
@@ -67,8 +67,8 @@ func Execute() {
 	)
 
 	// init database connection
-	dbw = initDatabase(os.Getenv("DATABASE_URL"))
-	dbr = initDatabase(os.Getenv("DATABASE_URL"))
+	relw = initDatabase(os.Getenv("DATABASE_URL"))
+	relr = initDatabase(os.Getenv("DATABASE_URL"))
 
 	rootCmd.AddCommand(dbCmd)
 	rootCmd.AddCommand(apiCmd)

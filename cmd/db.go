@@ -9,14 +9,14 @@ import (
 )
 
 func migrate(operation string) error {
-	m := migrator.New(dbw)
+	m := migrator.New(relw)
 
 	// register migrator service
 	user.Migrator(&m)
 
 	switch operation {
 	default:
-		return errors.New("Unrecog")
+		return errors.New("Unrecognized db migration command")
 	case "migrate":
 		m.Migrate(ctx)
 	case "rollback":

@@ -1,0 +1,19 @@
+type Schema {
+  Query: Query
+  Mutation: Mutation
+}
+
+type Query {
+  viewer(): User!
+}
+
+type Mutation {
+}
+
+type User {
+  id: String!
+  username: String!
+  email: String!
+  fullname: String
+  callname: String
+}

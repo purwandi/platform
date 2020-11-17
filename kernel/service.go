@@ -11,8 +11,8 @@ type Service struct {
 }
 
 // InitService ...
-func InitService(repo rel.Repository) *Service {
-	return &Service{
+func InitService(repo rel.Repository) Service {
+	return Service{
 		UserService: user.NewService(repo),
 	}
 }
