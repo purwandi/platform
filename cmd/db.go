@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/go-rel/rel/migrator"
 	"github.com/purwandi/platform/services/user"
 	"github.com/spf13/cobra"
 )
 
-func migrate(operation string) error {
+func migrate(operation string) {
 	m := migrator.New(relw)
 
 	// register migrator service
@@ -16,7 +14,7 @@ func migrate(operation string) error {
 
 	switch operation {
 	default:
-		return errors.New("Unrecognized db migration command")
+		logger.Error("Unrecognized db migration command")
 	case "migrate":
 		m.Migrate(ctx)
 	case "rollback":
@@ -27,8 +25,6 @@ func migrate(operation string) error {
 	for i := range shutdowns {
 		shutdowns[i]()
 	}
-
-	return nil
 }
 
 var dbMigrateCmd = &cobra.Command{
