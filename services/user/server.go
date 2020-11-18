@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -62,6 +63,11 @@ func (s *Server) Login(c echo.Context) error {
 
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	c.Response().Header().Set(
+		echo.HeaderAuthorization,
+		fmt.Sprintf("Bearer %s", u.GetAccessToken()),
+	)
 
 	return c.JSON(http.StatusOK, u)
 }

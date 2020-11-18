@@ -5,6 +5,9 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+	"github.com/google/uuid"
+	"github.com/purwandi/platform/pkg/cast"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // User ...
@@ -19,6 +22,48 @@ type User struct {
 	PhoneNumber *string   `json:"phone_number"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
+}
+
+// CreateUser ...
+func CreateUser(inpt RegisterInput) (*User, error) {
+	// Generate password
+	hash, err := bcrypt.GenerateFromPassword([]byte(inpt.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create user domain
+	return &User{
+		Username:  inpt.Username,
+		Email:     inpt.Email,
+		Password:  hash,
+		CreatedAt: time.Now(),
+	}, nil
+}
+
+// GenerateAccessToken ...
+func (u *User) GenerateAccessToken() error {
+	uid, err := uuid.NewRandom()
+	if err != nil {
+		return err
+	}
+
+	u.AccessToken = cast.String(uid.String())
+	return nil
+}
+
+// GetAccessToken ...
+func (u *User) GetAccessToken() string {
+	return cast.StringValue(u.AccessToken)
+}
+
+// IsPasswordIsValid check if password is valid
+func (u *User) IsPasswordIsValid(passwd string) (bool, error) {
+	if err := bcrypt.CompareHashAndPassword(u.Password, []byte(passwd)); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // RegisterInput ...

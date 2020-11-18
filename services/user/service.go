@@ -2,14 +2,11 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/go-rel/rel"
-	"github.com/google/uuid"
-	"github.com/purwandi/platform/pkg/cast"
 	"github.com/purwandi/platform/pkg/flaw"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Service ...
@@ -29,30 +26,22 @@ func (s *Service) CreateUser(ctx context.Context, inpt RegisterInput) (User, err
 		return User{}, flaw.Error(http.StatusBadRequest, err.Error())
 	}
 
-	// Generate password
-	hash, err := bcrypt.GenerateFromPassword([]byte(inpt.Password), bcrypt.DefaultCost)
+	u, err := CreateUser(inpt)
 	if err != nil {
 		return User{}, flaw.InternalError(err.Error())
 	}
 
-	// Create user domain
-	user := User{
-		Username:  inpt.Username,
-		Email:     inpt.Email,
-		Password:  hash,
-		CreatedAt: time.Now(),
-	}
-
 	// Persist data
-	if err := s.repository.Insert(ctx, &user); err != nil {
+	if err := s.repository.Insert(ctx, u); err != nil {
 		return User{}, flaw.Error(http.StatusInternalServerError, err.Error())
 	}
 
-	return user, nil
+	return *u, nil
 }
 
 // Authenticate ...
 func (s *Service) Authenticate(ctx context.Context, inpt LoginInput) (User, error) {
+
 	// Validate input
 	if err := inpt.Validate(); err != nil {
 		return User{}, flaw.BadRequest(err.Error())
@@ -60,21 +49,23 @@ func (s *Service) Authenticate(ctx context.Context, inpt LoginInput) (User, erro
 
 	// Process
 	u, err := s.FindByUsername(ctx, inpt.Username)
-
 	if err != nil {
 		return User{}, err
 	}
 
-	// Compare password
-	if err := bcrypt.CompareHashAndPassword(u.Password, []byte(inpt.Password)); err != nil {
+	// check if password is valid
+	if _, err := (&u).IsPasswordIsValid(inpt.Password); err != nil {
+		fmt.Println(err.Error(), " Helloo")
 		return User{}, flaw.BadRequest("Password is not valid")
 	}
 
-	// Update token
-	u.AccessToken = cast.String(uuid.New().String())
-	changeset := rel.Set("access_token", u.AccessToken)
+	// Generate token
+	if err := (&u).GenerateAccessToken(); err != nil {
+		return User{}, flaw.InternalError("Unable to generate access token")
+	}
 
 	// Persist data
+	changeset := rel.Set("access_token", u.GetAccessToken())
 	if err := s.repository.Update(ctx, &u, changeset); err != nil {
 		return User{}, flaw.InternalError("Unable to save data")
 	}
