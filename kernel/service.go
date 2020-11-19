@@ -7,12 +7,12 @@ import (
 
 // Service ...
 type Service struct {
-	UserService *user.Service
+	UserService *user.UserService
 }
 
 // InitService ...
 func InitService(repo rel.Repository) Service {
 	return Service{
-		UserService: user.NewService(repo),
+		UserService: user.NewUserService(repo),
 	}
 }

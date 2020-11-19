@@ -14,6 +14,7 @@ func MigrateCreateUser(schema *rel.Schema) {
 		t.String("callname", rel.Limit(32))
 		t.String("phone_number", rel.Limit(128))
 		t.Bool("active", rel.Default(false))
+		t.Text("project_roles")
 		t.DateTime("created_at")
 		t.DateTime("updated_at")
 	})

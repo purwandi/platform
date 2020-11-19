@@ -9,18 +9,18 @@ import (
 	"github.com/purwandi/platform/pkg/flaw"
 )
 
-// Service ...
-type Service struct {
+// UserService ...
+type UserService struct {
 	repository rel.Repository
 }
 
-// NewService is to register the service
-func NewService(repo rel.Repository) *Service {
-	return &Service{repository: repo}
+// NewUserService is to register the service
+func NewUserService(repo rel.Repository) *UserService {
+	return &UserService{repository: repo}
 }
 
 // CreateUser ...
-func (s *Service) CreateUser(ctx context.Context, inpt RegisterInput) (User, error) {
+func (s *UserService) CreateUser(ctx context.Context, inpt RegisterInput) (User, error) {
 	// Validate input
 	if err := inpt.Validate(); err != nil {
 		return User{}, flaw.Error(http.StatusBadRequest, err.Error())
@@ -40,7 +40,7 @@ func (s *Service) CreateUser(ctx context.Context, inpt RegisterInput) (User, err
 }
 
 // Authenticate ...
-func (s *Service) Authenticate(ctx context.Context, inpt LoginInput) (User, error) {
+func (s *UserService) Authenticate(ctx context.Context, inpt LoginInput) (User, error) {
 
 	// Validate input
 	if err := inpt.Validate(); err != nil {
@@ -75,7 +75,7 @@ func (s *Service) Authenticate(ctx context.Context, inpt LoginInput) (User, erro
 }
 
 // FindByUsername ...
-func (s *Service) FindByUsername(ctx context.Context, username string) (User, error) {
+func (s *UserService) FindByUsername(ctx context.Context, username string) (User, error) {
 	// Var
 	u := User{}
 
@@ -86,4 +86,29 @@ func (s *Service) FindByUsername(ctx context.Context, username string) (User, er
 
 	// Response
 	return u, nil
+}
+
+// FindUserByAccessToken ...
+func (s *UserService) FindUserByAccessToken(ctx context.Context, token string) (User, error) {
+	// Var
+	u := User{}
+
+	// Process
+	if err := s.repository.Find(ctx, &u, rel.Eq("access_token", token)); err != nil {
+		return u, flaw.InternalError(err.Error())
+	}
+
+	return u, nil
+}
+
+// AttachProjectRoles ...
+func (s *UserService) AttachProjectRoles(ctx context.Context, u *User, roles []int) (User, error) {
+	u.ProjectRoles = roles
+
+	changeset := rel.Set("project_roles", roles)
+	if err := s.repository.Update(ctx, u, changeset); err != nil {
+		return *u, err
+	}
+
+	return User{}, nil
 }

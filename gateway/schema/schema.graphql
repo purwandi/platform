@@ -1,6 +1,6 @@
 type Schema {
-  Query: Query
-  Mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
@@ -8,6 +8,7 @@ type Query {
 }
 
 type Mutation {
+  updateUserProjectRole(input: [Int!]!): User!
 }
 
 type User {

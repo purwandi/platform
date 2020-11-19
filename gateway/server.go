@@ -10,19 +10,21 @@ import (
 
 // Server ...
 type Server struct {
-	resolver *resolver.Resolver
+	authorization *Authorization
+	resolver      *resolver.Resolver
 }
 
 // NewServer is for creating resolver
 func NewServer(r *resolver.Resolver) *Server {
 	return &Server{
-		resolver: r,
+		resolver:      r,
+		authorization: NewAuthorizationMiddleware(r.UserService),
 	}
 }
 
 // Mount for mounting server
 func (s *Server) Mount(e *echo.Echo) {
-	e.POST("/query", s.GraphQL)
+	e.POST("/query", s.GraphQL, s.authorization.Check)
 }
 
 // GraphQL ...

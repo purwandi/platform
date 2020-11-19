@@ -12,16 +12,17 @@ import (
 
 // User ...
 type User struct {
-	ID          int       `json:"id"`
-	Username    string    `json:"username"`
-	Email       string    `json:"email"`
-	Password    []byte    `json:"-"`
-	AccessToken *string   `json:"-"`
-	Fullname    *string   `json:"fullname"`
-	Callname    *string   `json:"callname"`
-	PhoneNumber *string   `json:"phone_number"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"-"`
+	ID           int     `json:"id"`
+	Username     string  `json:"username"`
+	Email        string  `json:"email"`
+	Password     []byte  `json:"-"`
+	AccessToken  *string `json:"-"`
+	Fullname     *string `json:"fullname"`
+	Callname     *string `json:"callname"`
+	PhoneNumber  *string `json:"phone_number"`
+	ProjectRoles []int
+	CreatedAt    time.Time `json:"-"`
+	UpdatedAt    time.Time `json:"-"`
 }
 
 // CreateUser ...

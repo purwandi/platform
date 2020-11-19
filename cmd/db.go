@@ -43,6 +43,21 @@ var dbRollbackCmd = &cobra.Command{
 	},
 }
 
+var dbSeedCmd = &cobra.Command{
+	Use:   "seed",
+	Short: "Seed the database with records",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// Call user seeder
+		user.Seeder(ctx, relw)
+
+		// close
+		for i := range shutdowns {
+			shutdowns[i]()
+		}
+	},
+}
+
 var dbCmd = &cobra.Command{
 	Use:   "db",
 	Short: "Run database migration",
@@ -51,4 +66,5 @@ var dbCmd = &cobra.Command{
 func init() {
 	dbCmd.AddCommand(dbMigrateCmd)
 	dbCmd.AddCommand(dbRollbackCmd)
+	dbCmd.AddCommand(dbSeedCmd)
 }
