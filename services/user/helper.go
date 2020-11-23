@@ -11,7 +11,7 @@ import (
 // Migrator service
 func Migrator(m *migrator.Migrator) {
 	m.Register(20201114001, migrations.MigrateCreateUser, migrations.RollbackCreateUser)
-	m.Register(20201118001, migrations.MigrateCreateProjectRole, migrations.RollbackCreateProjectRole)
+	// m.Register(20201118001, migrations.MigrateCreateProjectRole, migrations.RollbackCreateProjectRole)
 }
 
 // Seeder ...

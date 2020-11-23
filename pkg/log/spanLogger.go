@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/opentracing/opentracing-go"
-	tag "github.com/opentracing/opentracing-go/ext"
+	"github.com/opentracing/opentracing-go/ext"
 	"github.com/opentracing/opentracing-go/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -28,7 +28,7 @@ func (sl spanLogger) Error(msg string, fields ...zapcore.Field) {
 
 func (sl spanLogger) Fatal(msg string, fields ...zapcore.Field) {
 	sl.logToSpan("fatal", msg, fields...)
-	tag.Error.Set(sl.span, true)
+	ext.Error.Set(sl.span, true)
 	sl.logger.Fatal(msg, append(sl.spanFields, fields...)...)
 }
 

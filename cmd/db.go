@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/go-rel/rel/migrator"
+	"github.com/purwandi/platform/services/product"
 	"github.com/purwandi/platform/services/user"
 	"github.com/spf13/cobra"
 )
@@ -11,6 +12,7 @@ func migrate(operation string) {
 
 	// register migrator service
 	user.Migrator(&m)
+	product.Migrator(&m)
 
 	switch operation {
 	default:

@@ -6,23 +6,22 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/google/uuid"
-	"github.com/purwandi/platform/pkg/cast"
+	"github.com/purwandi/platform/pkg/caster"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // User ...
 type User struct {
-	ID           int     `json:"id"`
-	Username     string  `json:"username"`
-	Email        string  `json:"email"`
-	Password     []byte  `json:"-"`
-	AccessToken  *string `json:"-"`
-	Fullname     *string `json:"fullname"`
-	Callname     *string `json:"callname"`
-	PhoneNumber  *string `json:"phone_number"`
-	ProjectRoles []int
-	CreatedAt    time.Time `json:"-"`
-	UpdatedAt    time.Time `json:"-"`
+	ID          int       `json:"id"`
+	Username    string    `json:"username"`
+	Email       string    `json:"email"`
+	Password    []byte    `json:"-"`
+	AccessToken *string   `json:"-"`
+	Fullname    *string   `json:"fullname"`
+	Callname    *string   `json:"callname"`
+	PhoneNumber *string   `json:"phone_number"`
+	CreatedAt   time.Time `json:"-"`
+	UpdatedAt   time.Time `json:"-"`
 }
 
 // CreateUser ...
@@ -49,13 +48,13 @@ func (u *User) GenerateAccessToken() error {
 		return err
 	}
 
-	u.AccessToken = cast.String(uid.String())
+	u.AccessToken = caster.String(uid.String())
 	return nil
 }
 
 // GetAccessToken ...
 func (u *User) GetAccessToken() string {
-	return cast.StringValue(u.AccessToken)
+	return caster.StringValue(u.AccessToken)
 }
 
 // IsPasswordIsValid check if password is valid

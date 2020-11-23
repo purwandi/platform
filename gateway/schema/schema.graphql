@@ -8,6 +8,7 @@ type Query {
 }
 
 type Mutation {
+  createProduct(input: CreateProductInput!): Product!
   updateUserProjectRole(input: [Int!]!): User!
 }
 
@@ -17,4 +18,17 @@ type User {
   email: String!
   fullname: String
   callname: String
+}
+
+input CreateProductInput {
+  code: String
+  name: String!
+  description: String
+}
+
+type Product {
+  id: Int!
+  code: String
+  name: String!
+  description: String
 }

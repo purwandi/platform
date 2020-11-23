@@ -10,11 +10,11 @@ import (
 
 // Authorization ...
 type Authorization struct {
-	UserService *user.UserService
+	UserService *user.Service
 }
 
 // NewAuthorizationMiddleware ...
-func NewAuthorizationMiddleware(s *user.UserService) *Authorization {
+func NewAuthorizationMiddleware(s *user.Service) *Authorization {
 	return &Authorization{UserService: s}
 }
 

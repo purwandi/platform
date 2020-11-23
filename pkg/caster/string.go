@@ -1,4 +1,4 @@
-package cast
+package caster
 
 // String ...
 func String(v string) *string {

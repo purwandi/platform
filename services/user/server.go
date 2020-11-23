@@ -10,11 +10,11 @@ import (
 
 // Server ...
 type Server struct {
-	service *UserService
+	service *Service
 }
 
 // NewServer ...
-func NewServer(service *UserService) *Server {
+func NewServer(service *Service) *Server {
 	return &Server{service: service}
 }
 

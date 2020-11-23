@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -9,18 +10,36 @@ import (
 	"github.com/purwandi/platform/pkg/flaw"
 )
 
-// UserService ...
-type UserService struct {
+// AuthService ...
+type AuthService struct{}
+
+// NewAuthService ...
+func NewAuthService() *AuthService {
+	return &AuthService{}
+}
+
+// User is to get current user ..
+func (s *AuthService) User(ctx context.Context) (User, error) {
+	u := ctx.Value("auth")
+	if u == nil {
+		return User{}, errors.New("Invalid user")
+	}
+
+	return u.(User), nil
+}
+
+// Service ...
+type Service struct {
 	repository rel.Repository
 }
 
-// NewUserService is to register the service
-func NewUserService(repo rel.Repository) *UserService {
-	return &UserService{repository: repo}
+// NewService is to register the service
+func NewService(repo rel.Repository) *Service {
+	return &Service{repository: repo}
 }
 
 // CreateUser ...
-func (s *UserService) CreateUser(ctx context.Context, inpt RegisterInput) (User, error) {
+func (s *Service) CreateUser(ctx context.Context, inpt RegisterInput) (User, error) {
 	// Validate input
 	if err := inpt.Validate(); err != nil {
 		return User{}, flaw.Error(http.StatusBadRequest, err.Error())
@@ -40,7 +59,7 @@ func (s *UserService) CreateUser(ctx context.Context, inpt RegisterInput) (User,
 }
 
 // Authenticate ...
-func (s *UserService) Authenticate(ctx context.Context, inpt LoginInput) (User, error) {
+func (s *Service) Authenticate(ctx context.Context, inpt LoginInput) (User, error) {
 
 	// Validate input
 	if err := inpt.Validate(); err != nil {
@@ -75,7 +94,7 @@ func (s *UserService) Authenticate(ctx context.Context, inpt LoginInput) (User, 
 }
 
 // FindByUsername ...
-func (s *UserService) FindByUsername(ctx context.Context, username string) (User, error) {
+func (s *Service) FindByUsername(ctx context.Context, username string) (User, error) {
 	// Var
 	u := User{}
 
@@ -89,7 +108,7 @@ func (s *UserService) FindByUsername(ctx context.Context, username string) (User
 }
 
 // FindUserByAccessToken ...
-func (s *UserService) FindUserByAccessToken(ctx context.Context, token string) (User, error) {
+func (s *Service) FindUserByAccessToken(ctx context.Context, token string) (User, error) {
 	// Var
 	u := User{}
 
@@ -101,14 +120,25 @@ func (s *UserService) FindUserByAccessToken(ctx context.Context, token string) (
 	return u, nil
 }
 
-// AttachProjectRoles ...
-func (s *UserService) AttachProjectRoles(ctx context.Context, u *User, roles []int) (User, error) {
-	u.ProjectRoles = roles
+// FindByUserID ...
+func (s *Service) FindByUserID(ctx context.Context, id int) (User, error) {
+	// Var
+	u := User{}
 
-	changeset := rel.Set("project_roles", roles)
-	if err := s.repository.Update(ctx, u, changeset); err != nil {
-		return *u, err
+	// Process
+	if err := s.repository.Find(ctx, &u, rel.Eq("id", id)); err != nil {
+		return u, flaw.InternalError(err.Error())
 	}
 
-	return User{}, nil
+	return u, nil
+}
+
+// UserExists ...
+func (s *Service) UserExists(ctx context.Context, id int) bool {
+	u, err := s.FindByUserID(ctx, id)
+	if (err != nil) || (u.ID == 0) {
+		return false
+	}
+
+	return true
 }

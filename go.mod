@@ -14,6 +14,7 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
+	github.com/spf13/cast v1.3.1
 	github.com/spf13/cobra v1.1.1
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.4.0+incompatible // indirect
