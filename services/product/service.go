@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/go-rel/rel"
 )
@@ -25,8 +26,8 @@ func NewService(repo rel.Repository, us userService) *Service {
 	}
 }
 
-// CreateProduct ...
-func (s *Service) CreateProduct(ctx context.Context, inpt CreateProductInput) (Product, error) {
+// Create ...
+func (s *Service) Create(ctx context.Context, inpt CreateProductInput) (Product, error) {
 	// Process
 	p, err := CreateProduct(inpt)
 	if err != nil {
@@ -45,4 +46,39 @@ func (s *Service) CreateProduct(ctx context.Context, inpt CreateProductInput) (P
 
 	// Return
 	return *p, nil
+}
+
+// FindByID ...
+func (s *Service) FindByID(ctx context.Context, id int) (Product, error) {
+	p := Product{}
+	err := s.repository.Find(ctx, &p, rel.Eq("id", id))
+	if (err != nil) || (p.ID == 0) {
+		return p, errors.New("Product not found")
+	}
+
+	return p, nil
+}
+
+// Update ...
+func (s *Service) Update(ctx context.Context, p Product, inpt UpdateProductInput) (Product, error) {
+	// Validate ...
+	err := inpt.Validate()
+	if err != nil {
+		return p, err
+	}
+
+	// Update
+	changeset := rel.NewChangeset(&p)
+	p.Code = inpt.Code
+	p.Name = inpt.Name
+	p.Description = inpt.Description
+	p.UpdatedAt = time.Now()
+
+	// Persist
+	if err = s.repository.Update(ctx, &p, changeset); err != nil {
+		return p, err
+	}
+
+	// Return
+	return p, nil
 }

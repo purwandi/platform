@@ -33,6 +33,22 @@ func (inpt CreateProductInput) Validate() error {
 	)
 }
 
+// UpdateProductInput ...
+type UpdateProductInput struct {
+	ID          int
+	Code        *string
+	Name        string
+	Description *string
+}
+
+// Validate ...
+func (inpt UpdateProductInput) Validate() error {
+	return validation.ValidateStruct(&inpt,
+		validation.Field(&inpt.ID, validation.Required),
+		validation.Field(&inpt.Name, validation.Required),
+	)
+}
+
 // CreateProduct ...
 func CreateProduct(inpt CreateProductInput) (*Product, error) {
 	if err := inpt.Validate(); err != nil {

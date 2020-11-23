@@ -14,6 +14,8 @@ func MigrateCreateProduct(schema *rel.Schema) {
 		t.DateTime("created_at")
 		t.DateTime("updated_at")
 	})
+
+	schema.CreateIndex("products", "products_user_id", []string{"user_id"})
 }
 
 func RollbackCreateProduct(schema *rel.Schema) {
