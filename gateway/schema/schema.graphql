@@ -10,6 +10,7 @@ type Query {
 type Mutation {
   createProduct(input: CreateProductInput!): Product!
   updateProduct(input: UpdateProductInput!): Product!
+  createModule(input: CreateModuleInput!): Module!
   updateUserProjectRole(input: [Int!]!): User!
 }
 
@@ -38,5 +39,23 @@ type Product {
   id: Int!
   code: String
   name: String!
+  description: String
+}
+
+input CreateModuleInput {
+  order_id: Int
+  project_id: Int!
+  type_id: String!
+  location: String
+  description: String
+}
+
+type Module {
+  id: Int!
+  order_id: Int
+  project_id: Int!
+  # type_id: String!
+  # status: String!
+  location: String
   description: String
 }
