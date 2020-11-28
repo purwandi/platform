@@ -1,0 +1,23 @@
+name: Unit Test
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+    - develop
+
+jobs:
+  build:
+    name: Unit test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-go@v1
+      with:
+        go-version: 1.15
+    - uses: actions/checkout@v2
+    - run: |
+        go mod download
+        go test ./...
