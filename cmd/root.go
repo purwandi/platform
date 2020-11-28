@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-rel/rel"
 	"github.com/go-rel/rel/adapter/postgres"
+	"github.com/go-rel/rel/adapter/sqlite3"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -23,17 +24,29 @@ var (
 	ctx = context.Background()
 )
 
-func initDatabase(dsn string) rel.Repository {
-	adapter, err := postgres.Open(dsn)
-	if err != nil {
-		logger.Fatal("Unable to connect database")
+func initDatabase(conn, dsn string) rel.Repository {
+	var repo rel.Repository
+
+	if conn == "postgres" {
+		adapter, err := postgres.Open(dsn)
+		if err != nil {
+			logger.Fatal("Unable to connect database")
+		}
+
+		shutdowns = append(shutdowns, adapter.Close)
+		repo = rel.New(adapter)
 	}
 
-	// register into shutdown function
-	shutdowns = append(shutdowns, adapter.Close)
+	if conn == "sqlite" {
+		adapter, err := sqlite3.Open(dsn)
+		if err != nil {
+			logger.Fatal("Unable to connect database")
+		}
 
-	// creating new
-	repo := rel.New(adapter)
+		shutdowns = append(shutdowns, adapter.Close)
+		repo = rel.New(adapter)
+	}
+
 	repo.Instrumentation(func(ctx context.Context, op, message string) func(err error) {
 		if strings.HasPrefix(op, "rel-") {
 			return func(error) {}
@@ -67,8 +80,8 @@ func Execute() {
 	)
 
 	// init database connection
-	relw = initDatabase(os.Getenv("DATABASE_URL"))
-	relr = initDatabase(os.Getenv("DATABASE_URL"))
+	relw = initDatabase(os.Getenv("DB_CONNECTION"), os.Getenv("DB_DSN"))
+	relr = initDatabase(os.Getenv("DB_CONNECTION"), os.Getenv("DB_DSN"))
 
 	rootCmd.AddCommand(dbCmd)
 	rootCmd.AddCommand(apiCmd)

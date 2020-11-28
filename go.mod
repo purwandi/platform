@@ -12,6 +12,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/lib/pq v1.8.0
+	github.com/mattn/go-sqlite3 v1.14.5
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/spf13/cast v1.3.1

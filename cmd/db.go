@@ -54,6 +54,7 @@ var dbSeedCmd = &cobra.Command{
 
 		// Call user seeder
 		user.Seeder(ctx, relw)
+		product.Seeder(ctx, relw)
 
 		// close
 		for i := range shutdowns {
