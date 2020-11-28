@@ -22,21 +22,6 @@ func (s *Service) FindAllTypes(ctx context.Context) ([]Type, error) {
 	return Types(), nil
 }
 
-// FindTypeByID ...
-func (s *Service) FindTypeByID(ctx context.Context, id int) (Type, error) {
-	types, _ := s.FindAllTypes(ctx)
-	t := Type{}
-
-	for _, item := range types {
-		if item.ID == id {
-			t = item
-			break
-		}
-	}
-
-	return t, nil
-}
-
 // FindTypeByCode ...
 func (s *Service) FindTypeByCode(ctx context.Context, code string) (Type, error) {
 	types, _ := s.FindAllTypes(ctx)

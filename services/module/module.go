@@ -19,7 +19,6 @@ const (
 
 // Type ...
 type Type struct {
-	ID          int
 	Code        typeModule
 	Name        string
 	Description *string
@@ -28,12 +27,12 @@ type Type struct {
 // Types ...
 func Types() []Type {
 	return []Type{
-		{ID: 1, Code: ModuleID, Name: "In-Depth Interview"},
-		{ID: 2, Code: ModuleTS, Name: "Testing"},
-		{ID: 3, Code: ModuleTR, Name: "Training"},
-		{ID: 4, Code: ModuleCC, Name: "Co Creation"},
-		{ID: 5, Code: ModuleSS, Name: "Scrum Sprint"},
-		{ID: 6, Code: ModuleDS, Name: "Design Sprint"},
+		{Code: ModuleID, Name: "In-Depth Interview"},
+		{Code: ModuleTS, Name: "Testing"},
+		{Code: ModuleTR, Name: "Training"},
+		{Code: ModuleCC, Name: "Co Creation"},
+		{Code: ModuleSS, Name: "Scrum Sprint"},
+		{Code: ModuleDS, Name: "Design Sprint"},
 	}
 }
 
