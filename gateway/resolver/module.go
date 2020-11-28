@@ -3,14 +3,28 @@ package resolver
 import (
 	"context"
 
-	"github.com/purwandi/platform/services/module"
-	"github.com/spf13/cast"
+	"github.com/purwandi/platform/gateway/types"
 )
 
-func (r *Resolver) CreateModule(ctx context.Context, args struct{ Input CreateModuleInput }) (ModuleResolver, error) {
-	return ModuleResolver{}, nil
+// ModuleTypes is for get avaiable module types
+func (r *Resolver) ModuleTypes(ctx context.Context) ([]types.ModuleTypeResolver, error) {
+	mt := []types.ModuleTypeResolver{}
+
+	// Process
+	res, err := r.ModuleService.FindAllTypes(ctx)
+	if err != nil {
+		return mt, err
+	}
+
+	// Parse into types
+	for _, item := range res {
+		mt = append(mt, types.ModuleTypeResolver{Type: item})
+	}
+
+	return mt, nil
 }
 
+// CreateModuleInput for create module input
 type CreateModuleInput struct {
 	OrderID     *int32
 	ProjectID   int32
@@ -19,22 +33,7 @@ type CreateModuleInput struct {
 	Description *string
 }
 
-type ModuleResolver struct {
-	module.Module
-}
-
-// ID ...
-func (m ModuleResolver) ID() int32 {
-	return cast.ToInt32(m.Module.ID)
-}
-
-// OrderID ...
-func (m ModuleResolver) OrderID() *int32 {
-	or := cast.ToInt32(m.Module.OrderID)
-	return &or
-}
-
-// ProjectID ...
-func (m ModuleResolver) ProjectID() int32 {
-	return cast.ToInt32(m.Module.ProjectID)
+// CreateModule for creating module
+func (r *Resolver) CreateModule(ctx context.Context, args struct{ Input CreateModuleInput }) (types.ModuleResolver, error) {
+	return types.ModuleResolver{}, nil
 }

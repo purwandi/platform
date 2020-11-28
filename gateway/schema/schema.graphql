@@ -5,6 +5,7 @@ type Schema {
 
 type Query {
   viewer(): User!
+  moduleTypes(): [ModuleType!]!
 }
 
 type Mutation {
@@ -12,50 +13,4 @@ type Mutation {
   updateProduct(input: UpdateProductInput!): Product!
   createModule(input: CreateModuleInput!): Module!
   updateUserProjectRole(input: [Int!]!): User!
-}
-
-type User {
-  id: String!
-  username: String!
-  email: String!
-  fullname: String
-  callname: String
-}
-
-input CreateProductInput {
-  code: String
-  name: String!
-  description: String
-}
-
-input UpdateProductInput {
-  id: Int!
-  code: String
-  name: String!
-  description: String
-}
-
-type Product {
-  id: Int!
-  code: String
-  name: String!
-  description: String
-}
-
-input CreateModuleInput {
-  order_id: Int
-  project_id: Int!
-  type_id: String!
-  location: String
-  description: String
-}
-
-type Module {
-  id: Int!
-  order_id: Int
-  project_id: Int!
-  # type_id: String!
-  # status: String!
-  location: String
-  description: String
 }

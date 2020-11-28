@@ -1,0 +1,23 @@
+input CreateModuleInput {
+  order_id: Int
+  project_id: Int!
+  type_id: String!
+  location: String
+  description: String
+}
+
+type Module {
+  id: Int!
+  order_id: Int
+  project_id: Int!
+  # type_id: String!
+  # status: String!
+  location: String
+  description: String
+}
+
+type ModuleType {
+  id: Int!
+  code: String!
+  name: String!
+}
