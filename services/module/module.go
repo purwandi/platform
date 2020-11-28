@@ -6,20 +6,27 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-type typeModule string
+// TypeID for module type id
+type TypeID string
 
 const (
-	ModuleID typeModule = "ID"
-	ModuleTS typeModule = "TS"
-	ModuleTR typeModule = "TR"
-	ModuleCC typeModule = "CC"
-	ModuleSS typeModule = "SS"
-	ModuleDS typeModule = "DS"
+	// ModuleID for in-depth interview
+	ModuleID TypeID = "ID"
+	// ModuleTS for testing
+	ModuleTS TypeID = "TS"
+	// ModuleTR for training
+	ModuleTR TypeID = "TR"
+	// ModuleCC for co-creation
+	ModuleCC TypeID = "CC"
+	// ModuleSS for scrum sprint
+	ModuleSS TypeID = "SS"
+	// ModuleDS for design sprint
+	ModuleDS TypeID = "DS"
 )
 
 // Type ...
 type Type struct {
-	Code        typeModule
+	Code        TypeID
 	Name        string
 	Description *string
 }
@@ -36,15 +43,22 @@ func Types() []Type {
 	}
 }
 
-type status string
+// Status flag module statuss
+type Status string
 
 const (
-	ARCHIVED  status = "ARCHIVED"
-	DRAFT     status = "DRAFT"
-	PUBLISHED status = "PUBLISHED"
-	POSTPONED status = "POSTPONED"
-	ONGOING   status = "ONGOING"
-	CLOSED    status = "CLOSED"
+	// ARCHIVED when project is archived
+	ARCHIVED Status = "ARCHIVED"
+	// DRAFT when project is draft
+	DRAFT Status = "DRAFT"
+	// PUBLISHED when project is draft
+	PUBLISHED Status = "PUBLISHED"
+	// POSTPONED when project is postponed
+	POSTPONED Status = "POSTPONED"
+	// ONGOING when project is ongoing
+	ONGOING Status = "ONGOING"
+	// CLOSED when project is closed
+	CLOSED Status = "CLOSED"
 )
 
 // Module ...
@@ -52,8 +66,8 @@ type Module struct {
 	ID          int
 	OrderID     *int
 	ProjectID   int
-	TypeID      typeModule
-	Status      status
+	TypeID      TypeID
+	Status      Status
 	Location    *string
 	SuccessRate *float32
 	Description *string
@@ -65,7 +79,7 @@ type Module struct {
 type CreateModuleInput struct {
 	OrderID     *int
 	ProjectID   int
-	TypeID      typeModule
+	TypeID      TypeID
 	Location    *string
 	Description *string
 }
@@ -73,7 +87,7 @@ type CreateModuleInput struct {
 // Validate ...
 func (inpt CreateModuleInput) Validate() error {
 	return validation.ValidateStruct(&inpt,
-		validation.Field(&inpt.OrderID, validation.Required),
+		validation.Field(&inpt.ProjectID, validation.Required),
 		validation.Field(&inpt.TypeID, validation.Required),
 	)
 }
@@ -82,6 +96,6 @@ func (inpt CreateModuleInput) Validate() error {
 type History struct {
 	ID        int
 	ModuleID  int
-	Status    status
+	Status    Status
 	CreatedAt time.Time
 }

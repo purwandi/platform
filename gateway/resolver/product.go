@@ -16,6 +16,7 @@ type CreateProductInput struct {
 	Description *string
 }
 
+// UpdateProductInput for update product input
 type UpdateProductInput struct {
 	ID          int32
 	Code        *string
@@ -25,6 +26,7 @@ type UpdateProductInput struct {
 
 // CreateProduct ...
 func (r *Resolver) CreateProduct(ctx context.Context, args struct{ Input CreateProductInput }) (types.Product, error) {
+	// Get current user
 	u, err := r.AuthService.User(ctx)
 	if err != nil {
 		return types.Product{}, err

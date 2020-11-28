@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/go-rel/rel"
@@ -52,6 +53,9 @@ func (s *Service) Create(ctx context.Context, inpt CreateProductInput) (Product,
 func (s *Service) FindByID(ctx context.Context, id int) (Product, error) {
 	p := Product{}
 	err := s.repository.Find(ctx, &p, rel.Eq("id", id))
+
+	fmt.Println(p, id)
+
 	if (err != nil) || (p.ID == 0) {
 		return p, errors.New("Product not found")
 	}

@@ -2,6 +2,7 @@ package module
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/go-rel/rel"
@@ -34,6 +35,10 @@ func (s *Service) FindTypeByCode(ctx context.Context, code string) (Type, error)
 		}
 	}
 
+	if (Type{} == t) {
+		return t, errors.New("Unrecognized type code")
+	}
+
 	return t, nil
 }
 
@@ -43,7 +48,7 @@ func (s *Service) CreateModule(ctx context.Context, inpt CreateModuleInput) (Mod
 
 	// Validate
 	if err := inpt.Validate(); err != nil {
-		return m, nil
+		return m, err
 	}
 
 	// Set
@@ -56,7 +61,7 @@ func (s *Service) CreateModule(ctx context.Context, inpt CreateModuleInput) (Mod
 
 	// Persist
 	if err := s.repository.Insert(ctx, &m); err != nil {
-		return m, nil
+		return m, err
 	}
 
 	// return
