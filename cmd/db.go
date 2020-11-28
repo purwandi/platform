@@ -24,11 +24,11 @@ func migrate(operation string) {
 	case "rollback":
 		m.Rollback(ctx)
 	}
+}
 
-	// close
-	for i := range shutdowns {
-		shutdowns[i]()
-	}
+func seeder() {
+	user.Seeder(ctx, relw)
+	product.Seeder(ctx, relw)
 }
 
 var dbMigrateCmd = &cobra.Command{
@@ -36,6 +36,11 @@ var dbMigrateCmd = &cobra.Command{
 	Short: "Migrate the last database migration",
 	Run: func(cmd *cobra.Command, args []string) {
 		migrate("migrate")
+
+		// close
+		for i := range shutdowns {
+			shutdowns[i]()
+		}
 	},
 }
 
@@ -44,6 +49,11 @@ var dbRollbackCmd = &cobra.Command{
 	Short: "Rollback the last database migration",
 	Run: func(cmd *cobra.Command, args []string) {
 		migrate("rollback")
+
+		// close
+		for i := range shutdowns {
+			shutdowns[i]()
+		}
 	},
 }
 
@@ -51,11 +61,7 @@ var dbSeedCmd = &cobra.Command{
 	Use:   "seed",
 	Short: "Seed the database with records",
 	Run: func(cmd *cobra.Command, args []string) {
-
-		// Call user seeder
-		user.Seeder(ctx, relw)
-		product.Seeder(ctx, relw)
-
+		seeder()
 		// close
 		for i := range shutdowns {
 			shutdowns[i]()
