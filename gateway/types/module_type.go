@@ -4,12 +4,12 @@ import (
 	"github.com/purwandi/platform/services/module"
 )
 
-// ModuleTypeResolver entity
-type ModuleTypeResolver struct {
+// ModuleType entity
+type ModuleType struct {
 	module.Type
 }
 
 // Code for cast code
-func (m ModuleTypeResolver) Code() string {
+func (m ModuleType) Code() string {
 	return string(m.Type.Code)
 }

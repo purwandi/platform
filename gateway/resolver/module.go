@@ -7,8 +7,8 @@ import (
 )
 
 // ModuleTypes is for get avaiable module types
-func (r *Resolver) ModuleTypes(ctx context.Context) ([]types.ModuleTypeResolver, error) {
-	mt := []types.ModuleTypeResolver{}
+func (r *Resolver) ModuleTypes(ctx context.Context) ([]types.ModuleType, error) {
+	mt := []types.ModuleType{}
 
 	// Process
 	res, err := r.ModuleService.FindAllTypes(ctx)
@@ -18,7 +18,7 @@ func (r *Resolver) ModuleTypes(ctx context.Context) ([]types.ModuleTypeResolver,
 
 	// Parse into types
 	for _, item := range res {
-		mt = append(mt, types.ModuleTypeResolver{Type: item})
+		mt = append(mt, types.ModuleType{Type: item})
 	}
 
 	return mt, nil
@@ -34,6 +34,6 @@ type CreateModuleInput struct {
 }
 
 // CreateModule for creating module
-func (r *Resolver) CreateModule(ctx context.Context, args struct{ Input CreateModuleInput }) (types.ModuleResolver, error) {
-	return types.ModuleResolver{}, nil
+func (r *Resolver) CreateModule(ctx context.Context, args struct{ Input CreateModuleInput }) (types.Module, error) {
+	return types.Module{}, nil
 }

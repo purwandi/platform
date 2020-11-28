@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/purwandi/platform/gateway/types"
 	"github.com/purwandi/platform/services/product"
 	"github.com/spf13/cast"
 )
@@ -23,10 +24,10 @@ type UpdateProductInput struct {
 }
 
 // CreateProduct ...
-func (r *Resolver) CreateProduct(ctx context.Context, args struct{ Input CreateProductInput }) (ProductResolver, error) {
+func (r *Resolver) CreateProduct(ctx context.Context, args struct{ Input CreateProductInput }) (types.Product, error) {
 	u, err := r.AuthService.User(ctx)
 	if err != nil {
-		return ProductResolver{}, err
+		return types.Product{}, err
 	}
 
 	// Given
@@ -40,18 +41,18 @@ func (r *Resolver) CreateProduct(ctx context.Context, args struct{ Input CreateP
 	// Process
 	p, err := r.ProductService.Create(ctx, inpt)
 	if err != nil {
-		return ProductResolver{}, err
+		return types.Product{}, err
 	}
 
 	// Return
-	return ProductResolver{Product: p}, nil
+	return types.Product{Product: p}, nil
 }
 
 // UpdateProduct ...
-func (r *Resolver) UpdateProduct(ctx context.Context, args struct{ Input UpdateProductInput }) (ProductResolver, error) {
+func (r *Resolver) UpdateProduct(ctx context.Context, args struct{ Input UpdateProductInput }) (types.Product, error) {
 	u, err := r.AuthService.User(ctx)
 	if err != nil {
-		return ProductResolver{}, err
+		return types.Product{}, err
 	}
 
 	// Given
@@ -65,29 +66,19 @@ func (r *Resolver) UpdateProduct(ctx context.Context, args struct{ Input UpdateP
 	// Process
 	p, err := r.ProductService.FindByID(ctx, inpt.ID)
 	if err != nil {
-		return ProductResolver{Product: p}, err
+		return types.Product{Product: p}, err
 	}
 
 	// check product ownership
 	if p.UserID != u.ID {
-		return ProductResolver{}, errors.New("Is not allowed")
+		return types.Product{}, errors.New("Is not allowed")
 	}
 
 	// Update
 	p, err = r.ProductService.Update(ctx, p, inpt)
 	if err != nil {
-		return ProductResolver{}, err
+		return types.Product{}, err
 	}
 
-	return ProductResolver{Product: p}, nil
-}
-
-// ProductResolver ...
-type ProductResolver struct {
-	product.Product
-}
-
-// ID ...
-func (p ProductResolver) ID() int32 {
-	return cast.ToInt32(p.Product.ID)
+	return types.Product{Product: p}, nil
 }
