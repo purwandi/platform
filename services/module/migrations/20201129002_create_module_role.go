@@ -8,6 +8,7 @@ import (
 func MigrateCreateModuleRole(schema *rel.Schema) {
 	schema.CreateTable("modules_roles", func(t *rel.Table) {
 		t.Int("id")
+		t.Int("module_id", rel.Unsigned(true))
 		t.Int("role_id", rel.Unsigned(true))
 		t.Int("quantity", rel.Unsigned(true))
 		t.Text("nice_to_have")
@@ -20,6 +21,7 @@ func MigrateCreateModuleRole(schema *rel.Schema) {
 		t.DateTime("updated_at")
 
 		t.ForeignKey("role_id", "roles", "id")
+		t.ForeignKey("module_id", "modules", "id")
 	})
 }
 

@@ -19,20 +19,20 @@ func NewService(repo rel.Repository) *Service {
 
 // CreateModule ...
 func (s *Service) CreateModule(ctx context.Context, inpt CreateModuleInput) (Module, error) {
-	var m Module
-
 	// Validate
 	if err := inpt.Validate(); err != nil {
-		return m, err
+		return Module{}, err
 	}
 
 	// Set
-	m.ProjectID = inpt.ProjectID
-	m.TypeID = inpt.TypeID
-	m.Status = DRAFT
-	m.Location = inpt.Location
-	m.Description = inpt.Description
-	m.CreatedAt = time.Now()
+	m := Module{
+		ProjectID:   inpt.ProjectID,
+		TypeID:      inpt.TypeID,
+		Status:      DRAFT,
+		Location:    inpt.Location,
+		Description: inpt.Description,
+		CreatedAt:   time.Now(),
+	}
 
 	// Persist
 	if err := s.repository.Insert(ctx, &m); err != nil {

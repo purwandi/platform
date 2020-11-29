@@ -12,18 +12,11 @@ func (s *Service) FindAllTypes(ctx context.Context) ([]Type, error) {
 
 // FindTypeByCode ...
 func (s *Service) FindTypeByCode(ctx context.Context, code string) (Type, error) {
-	t := Type{}
-
 	for _, item := range Types() {
 		if string(item.Code) == code {
-			t = item
-			break
+			return item, nil
 		}
 	}
 
-	if (Type{} == t) {
-		return t, errors.New("Unrecognized type code")
-	}
-
-	return t, nil
+	return Type{}, errors.New("Unrecognized type code")
 }
