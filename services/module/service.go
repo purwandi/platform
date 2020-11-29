@@ -2,7 +2,6 @@ package module
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/go-rel/rel"
@@ -16,30 +15,6 @@ type Service struct {
 // NewService ....
 func NewService(repo rel.Repository) *Service {
 	return &Service{repository: repo}
-}
-
-// FindAllTypes for get available module types
-func (s *Service) FindAllTypes(ctx context.Context) ([]Type, error) {
-	return Types(), nil
-}
-
-// FindTypeByCode ...
-func (s *Service) FindTypeByCode(ctx context.Context, code string) (Type, error) {
-	types, _ := s.FindAllTypes(ctx)
-	t := Type{}
-
-	for _, item := range types {
-		if string(item.Code) == code {
-			t = item
-			break
-		}
-	}
-
-	if (Type{} == t) {
-		return t, errors.New("Unrecognized type code")
-	}
-
-	return t, nil
 }
 
 // CreateModule ...

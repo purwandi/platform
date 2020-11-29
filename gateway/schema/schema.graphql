@@ -6,6 +6,7 @@ type Schema {
 type Query {
   viewer(): User!
   moduleTypes(): [ModuleType!]!
+  roles(): [Role!]!
 }
 
 type Mutation {

@@ -20,3 +20,10 @@ type ModuleType {
   code: String!
   name: String!
 }
+
+type Role {
+  id: Int!
+  name: String!
+  requirement: String!
+  description: String!
+}

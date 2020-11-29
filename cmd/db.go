@@ -29,6 +29,7 @@ func migrate(operation string) {
 func seeder() {
 	user.Seeder(ctx, relw)
 	product.Seeder(ctx, relw)
+	module.Seeder(ctx, relw)
 }
 
 var dbMigrateCmd = &cobra.Command{

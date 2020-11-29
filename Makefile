@@ -6,6 +6,12 @@ clean:
 	@go run . db migrate
 	@go run . db seed
 
+migrate:
+	@go run . db migrate
+
+rollback:
+	@go run . db rollback
+
 compile:
 	@echo "\n${HR}"
 	@echo "Parse graphql schema ..."
